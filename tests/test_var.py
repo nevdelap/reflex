@@ -250,6 +250,11 @@ def test_basic_operations(TestObj):
     Args:
         TestObj: The test object.
     """
+    # Unary operators.
+    assert str(~v(1)) == "{!1}"
+    assert str(-v(1)) == "{-(1)}"
+
+    # Binary operators.
     assert str(v(1) == v(2)) == "{(1 === 2)}"
     assert str(v(1) != v(2)) == "{(1 !== 2)}"
     assert str(v(1) < v(2)) == "{(1 < 2)}"
@@ -272,6 +277,17 @@ def test_basic_operations(TestObj):
     )
     assert str(abs(v(1))) == "{Math.abs(1)}"
     assert str(v([1, 2, 3]).length()) == "{[1, 2, 3].length}"
+
+    # Right side binary operators. Type ignores because pyright is misreporting
+    # as if the right side dunders didn't exist.
+    assert str(1 + v(2)) == "{(1 + 2)}"  # type: ignore
+    assert str(1 - v(2)) == "{(1 - 2)}"  # type: ignore
+    assert str(1 * v(2)) == "{(1 * 2)}"  # type: ignore
+    assert str(1 / v(2)) == "{(1 / 2)}"  # type: ignore
+    assert str(1 % v(2)) == "{(1 % 2)}"  # type: ignore
+    assert str(1 ** v(2)) == "{Math.pow(1 , 2)}"  # type: ignore
+    assert str(1 & v(2)) == "{(1 && 2)}"  # type: ignore
+    assert str(1 | v(2)) == "{(1 || 2)}"  # type: ignore
 
 
 @pytest.mark.parametrize(
